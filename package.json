@@ -1,0 +1,49 @@
+{
+  "name": "roadbook_nodejs",
+  "version": "1.0.0",
+  "description": "roadbook nodejs examples",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MinkyungPark/roadbook_nodejs.git"
+  },
+  "author": "MinkyungPark",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MinkyungPark/roadbook_nodejs/issues"
+  },
+  "homepage": "https://github.com/MinkyungPark/roadbook_nodejs#readme",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "cloudinary": "^1.32.0",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "ejs": "^3.1.8",
+    "express": "^4.18.1",
+    "express-session": "^1.17.3",
+    "mongoose": "^6.6.4",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^2.3.3",
+    "passport": "^0.6.0",
+    "passport-local": "^1.0.0",
+    "passport-local-mongoose": "^7.1.2",
+    "redis": "^4.3.1",
+    "request": "^2.88.2",
+    "sequelize": "^6.23.2",
+    "sequelize-cli": "^6.5.1",
+    "socket.io": "^4.5.2",
+    "url": "^0.11.0",
+    "uuid-apikey": "^1.5.3",
+    "ws": "^8.9.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
