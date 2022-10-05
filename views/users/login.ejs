@@ -115,7 +115,7 @@
             <div class="content">
               <h2>Login</h2>
               <form id="form-login" method="POST" action="/user/login">
-                <input type="hidden" name="_csurf" value="<%=csurfToken %>">
+                <input type="hidden" name="_csrf" value="<%=csrfToken %>">
                 <div class="form-element form-stack">
                   <label for="username-login" class="form-label">Email</label>
                   <input id="username-login" type="email" name="username">

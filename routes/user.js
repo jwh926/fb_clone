@@ -3,8 +3,8 @@ const User = require("../models/User");
 const passport = require("passport");
 const multer = require("multer");
 const cloudinary = require("cloudinary");
-const csruf = require('csruf');
-const csurfProtection = csurf({cookie: true});
+const csrf = require('csurf');
+const csrfProtection = csrf({cookie: true});
 const router = express.Router();
 
 const storage = multer.diskStorage({
@@ -75,13 +75,13 @@ function createUser(newUser, password, req, res) {
 	});
 }
 
-router.get("/user/login", csurfProtection, (req, res) => {
-	res.render("users/login", {csurfToken: req.csurfToken()});
+router.get("/user/login", csrfProtection, (req, res) => {
+	res.render("users/login", {csrfToken: req.csrfToken()});
 });
 
 router.post(
 	"/user/login",
-	csurfProtection,
+	csrfProtection,
 	passport.authenticate("local", {
 		successRedirect: "/",
 		failureRedirect: "/user/login",
