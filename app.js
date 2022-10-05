@@ -1,4 +1,5 @@
 const express = require("express");
+const morgan = require('morgan');
 const mongoose = require("mongoose");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
@@ -38,7 +39,8 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static("public"));
+app.use('/static', express.static("public"));
+app.use(morgan('dev'));
 
 mongoose
 	.connect("mongodb://127.0.0.1:27017/fb_clone", {
@@ -57,6 +59,7 @@ app.use((req, res, next) => {
 	res.locals.login = req.isAuthenticated();
 	res.locals.error = req.flash("error");
 	res.locals.success = req.flash("success");
+	next();
 });
 
 app.use("/", userRoutes);
@@ -70,9 +73,9 @@ const io = socket(server);
 
 const room = io.of("/chat");
 room.on("connection", (socket) => {
-	console.log("New user:", socket.id);
 	room.emit("newUser", { socketID: socket.id });
 	socket.on("newUser", (data) => {
+		console.log(data);
 		if (!(data.name in onlineChatUsers)) {
 			onlineChatUsers[data.name] = data.socketID;
 			socket.name = data.name;
@@ -82,7 +85,7 @@ room.on("connection", (socket) => {
 	});
 	socket.on("chat", (data) => {
 		console.log(data);
-		if (data.io === "Global chat") {
+		if (data.to === "Global Chat") {
 			room.emit("chat", data);
 		} else if (data.to) {
 			room.to(onlineChatUsers[data.name]).emit("chat", data);

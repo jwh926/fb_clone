@@ -1,9 +1,9 @@
 <%- include('../partials/header') %>
-<link rel="stylesheet" href="/posts/index.css">
+<link rel="stylesheet" href="/static/posts/index.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
 <% if (login) { %>
     <% var firstName = user.firstName %>
-    <p>Hello <span class="text-muted"><%= user.firstName %></span></p>
+    <!-- <p>Hello <span class="text-muted"><%= user.firstName %></span></p> -->
 <% } else { %>
     <p>Hello <span class="text-muted">guest</span>. Would you like to <a style="text-decoration: none;" href="/user/register">register</a> or <a style="text-decoration: none;" href="/user/login">login</a>?</p>
 <% } %>

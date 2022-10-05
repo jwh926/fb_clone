@@ -4,7 +4,6 @@ const User = require("../models/User");
 const Comment = require("../models/Comment");
 const multer = require("multer");
 const cloudinary = require("cloudinary");
-const { createPoolCluster } = require("mysql2");
 const router = express.Router();
 
 const storage = multer.diskStorage({
@@ -65,6 +64,7 @@ router.get("/", isLoggedIn, (req, res) => {
 					posts.push(user.posts[i]);
 				}
 				if (posts) {
+					// console.log(posts);
 					res.render("posts/index", {
 						posts: posts,
 					});
@@ -158,6 +158,7 @@ router.post("/post/new", isLoggedIn, upload.single("image"), (req, res) => {
 				newPost.time = new Date();
 				newPost.likes = 0;
 				newPost.content = req.body.content;
+				// console.log(newPost);
 				return createPost(newPost, req, res);
 			});
 		} else {
@@ -166,6 +167,7 @@ router.post("/post/new", isLoggedIn, upload.single("image"), (req, res) => {
 			newPost.time = new Date();
 			newPost.likes = 0;
 			newPost.content = req.body.content;
+			// console.log(newPost);
 			return createPost(newPost, req, res);
 		}
 	}
@@ -217,11 +219,12 @@ router.post("/post/:id/comments/new", isLoggedIn, (req, res) => {
 					comment.creator.firstName = req.user.firstName;
 					comment.creator.lastName = req.user.lastName;
 					comment.likes = 0;
+					console.log(comment);
 					comment.save();
-					post.comments.push();
+					post.comments.push(comment);
 					post.save();
 					req.flash("success", "Successfully posted your comment");
-					req.redirect("/post/", +post._id);
+					res.redirect("/post/" + post._id);
 				}
 			});
 		}

@@ -99,8 +99,9 @@ router.get("/user/all", isLoggedIn, (req, res) => {
 });
 
 router.get("/user/logout", (req, res) => {
-	req.logout();
-	res.redirect("back");
+	req.logout(() => {
+		res.redirect("back");
+	});
 });
 
 router.get("/user/:id/profile", isLoggedIn, (req, res) => {

@@ -66,13 +66,13 @@
         <% // } %>
     </div>
     <div id="chat-window" class="chat-window">
-        <h3 id="chat_header" class="user-heading">Chat Chat 🥳</h3>
+        <h3 id="chat-header" class="user-heading"></h3>
         <div id="output" class="output">
 
         </div>
         <form id="send-message">
             <div class="message">
-                <input type="text" id="message" placholder="Message">
+                <input type="text" id="message" placeholder="Message">
             </div>
             <div id="send" class="send">
                 <button class="btn btn-primary">Send</button>
@@ -94,9 +94,10 @@
     const users = document.getElementById("users");
     const chat = document.getElementById("chat-window");
     const form = document.getElementById("send-message");
-    const chat_header = document.getElementById("chat_header");
+    const chat_header = document.getElementById("chat-header");
 
-    const sendTo = "";
+    let sendTo = "Global Chat";
+    setUser(sendTo);
 
     form.addEventListener("submit", (e) => {
         e.preventDefault();
@@ -104,14 +105,14 @@
             socket.emit("chat", {
                 message: message.value,
                 name: username,
-                to: chat_header.innerHTML
+                to: sendTo
             })
             message.value = "";
         }
     })
 
-    socket.on("chat", data => {
-        console.log(data)
+    socket.on("chat", (data) => {
+        console.log(data);
         if (data.to === "Global Chat") {
             if (data.name === username) {
                 output.innerHTML += `<p><strong>You</strong> - ${data.message}</p>`
@@ -128,25 +129,26 @@
         chat.scrollTop = chat.scrollHeight;
     })
 
-    socket.on("newUser", data => {
-        socket.emit("newUser", { name: username, socketID: data.socketID })
-    })
+    socket.on("newUser", (data) => {
+        socket.emit("newUser", { name: username, socketID: data.socketID });
+    });
 
-    socket.on("updateUserList", data => {
-        console.log(data)
-        let string = `<li class="list-group-item"><button style="border: none; background: none; cursor: pointer; outline: none" onclick='setUser("Global Chat")'>Global Chat</button></li>`;
-        for(var i = 0; i < data.length; i++) {
+    let string = `<li class="list-group-item"><button style="border: none; background: none; cursor: pointer; outline: none" onclick='setUser("Global Chat")'>Global Chat</button></li>`;
+    users.innerHTML = string;
+    socket.on("updateUserList", (data) => {
+        console.log(data);
+        for(let i = 0; i < data.length; i++) {
             if (data[i] !== username) {
                 string += `<li class="list-group-item"><button style="border: none; background: none; cursor: pointer; outline: none;" onclick='setUser(${JSON.stringify(data[i])})'>${data[i]}</button></li>`;
             }
         }
         users.innerHTML = string;
-    })
+    });
 
     function setUser(name) {
         if (username !== name) {
             chat_header.innerHTML = name;
-            // output.innerHTML = "";
+            sendTo = name;
         }
     }
 </script>
