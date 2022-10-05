@@ -1,4 +1,5 @@
 const express = require("express");
+const sanitize = require("sanitize-html");
 const Post = require("../models/Post");
 const User = require("../models/User");
 const Comment = require("../models/Comment");
@@ -157,7 +158,7 @@ router.post("/post/new", isLoggedIn, upload.single("image"), (req, res) => {
 				newPost.creator = req.user;
 				newPost.time = new Date();
 				newPost.likes = 0;
-				newPost.content = req.body.content;
+				newPost.content = sanitize(req.body.content);
 				// console.log(newPost);
 				return createPost(newPost, req, res);
 			});
@@ -166,7 +167,7 @@ router.post("/post/new", isLoggedIn, upload.single("image"), (req, res) => {
 			newPost.creator = req.user;
 			newPost.time = new Date();
 			newPost.likes = 0;
-			newPost.content = req.body.content;
+			newPost.content = sanitize(req.body.content);
 			// console.log(newPost);
 			return createPost(newPost, req, res);
 		}

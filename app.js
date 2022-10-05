@@ -41,7 +41,7 @@ if (process.env.NODE_ENV === "production") {
 
 if (process.env.NODE_ENV === "production") {
 	app.use(morgan("combined"));
-	app.use(helmet({contentSecurityPolicy: false}));
+	app.use(helmet({ contentSecurityPolicy: false }));
 	app.use(hpp());
 } else {
 	app.use(morgan("dev"));
