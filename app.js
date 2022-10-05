@@ -1,5 +1,6 @@
 const express = require("express");
-const morgan = require('morgan');
+const morgan = require("morgan");
+const winston = require("winston");
 const mongoose = require("mongoose");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
@@ -39,8 +40,12 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use('/static', express.static("public"));
-app.use(morgan('dev'));
+app.use("/static", express.static("public"));
+if (process.env.NODE_ENV === "production") {
+	app.use(morgan("combined"));
+} else {
+	app.use(morgan("dev"));
+}
 
 mongoose
 	.connect("mongodb://127.0.0.1:27017/fb_clone", {
