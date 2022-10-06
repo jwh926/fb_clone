@@ -118,7 +118,7 @@ router.get("/user/:id/profile", isLoggedIn, (req, res) => {
 				req.flash("error", "error occurred");
 				res.redirect("back");
 			} else {
-				console.log(user);
+				// console.log(user);
 				res.render("users/user", { userData: user });
 			}
 		});
@@ -166,6 +166,7 @@ router.get("/user/:id/add", isLoggedIn, (req, res) => {
 						"success",
 						`sent friend request to ${foundUser.firstName}`
 					);
+					res.redirect(`/user/${currUser._id}/profile`);
 				}
 			});
 		}
@@ -173,7 +174,7 @@ router.get("/user/:id/add", isLoggedIn, (req, res) => {
 });
 
 router.get("/user/:id/accept", isLoggedIn, (req, res) => {
-	User.findById(req.params.id, (err, user) => {
+	User.findById(req.user._id, (err, user) => {
 		if (err) {
 			console.log(err);
 			req.flash(
@@ -183,9 +184,11 @@ router.get("/user/:id/accept", isLoggedIn, (req, res) => {
 			res.redirect("back");
 		} else {
 			User.findById(req.params.id, (err, foundUser) => {
-				let r = user.friendRequests.find((o) =>
-					o._id.equals(req.params.id)
-				);
+				let r = user.friendRequests.find(o => {
+					// console.log(o._id.equals(req.params.id));
+					return o._id.equals(req.params.id);
+				});
+				// console.log(r);
 				if (r) {
 					let index = user.friendRequests.indexOf(r);
 					user.friendRequests.splice(index, 1);
