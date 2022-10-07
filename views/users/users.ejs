@@ -1,10 +1,10 @@
 <%- include('../partials/header') %>
-
+<link rel="stylesheet" href="/static/users/users.css" />
 
 <div class="row">
     <% users.forEach(function(person) { %> 
         <div class="card col-sm-3">
-            <img class="card-img-top" src="/images/profile.png" alt="Profile">
+            <img class="card-img-top" src="/static/images/profile.png" alt="Profile">
             <div class="card-body">
                 <h4 class="card-title"><%= person.firstName + " " + person.lastName %></h4>
                 <p class="card-text">Test</p>
