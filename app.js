@@ -1,8 +1,11 @@
 const express = require("express");
+const path = require('path');
 const morgan = require("morgan");
 const mongoose = require("mongoose");
 const session = require("express-session");
+const MongoStore = require("connect-mongo");
 const cookieParser = require("cookie-parser");
+const cors = require("cors");
 const helmet = require("helmet");
 const hpp = require("hpp");
 const passport = require("passport");
@@ -23,6 +26,7 @@ const winston = require("./config/winston");
 const app = express();
 
 app.set("view engine", "ejs");
+app.set("trust proxy", 1);
 
 const sessOptions = {
 	secret: process.env.SECRET,
@@ -32,16 +36,22 @@ const sessOptions = {
 		httpOnly: true,
 		secure: false,
 	},
+	store: MongoStore.create({
+		mongoUrl: process.env.MONGO_URL,
+		mongooseConnection: mongoose.connection,
+		ttl: 7 * 24 * 60 * 60,
+	}),
 };
 
 if (process.env.NODE_ENV === "production") {
-	sessOptions.proxy = true;
-	sessOptions.cookie.secure = true;
-}
-
-if (process.env.NODE_ENV === "production") {
+	// 	sessOptions.proxy = true;
+	// 	sessOptions.cookie.secure = true;
 	app.use(morgan("combined"));
-	app.use(helmet({ contentSecurityPolicy: false }));
+	app.use(
+		helmet({
+			contentSecurityPolicy: false,
+		})
+	);
 	app.use(hpp());
 } else {
 	app.use(morgan("dev"));
@@ -50,6 +60,7 @@ if (process.env.NODE_ENV === "production") {
 app.use(session(sessOptions));
 app.use(cookieParser(process.env.SECRET));
 app.use(flash());
+app.use(cors());
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -59,7 +70,7 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use("/static", express.static("public"));
+app.use("/static", express.static(path.join(__dirname, "public")));
 
 mongoose
 	.connect("mongodb://127.0.0.1:27017/fb_clone", {
@@ -78,6 +89,7 @@ app.use((req, res, next) => {
 	res.locals.login = req.isAuthenticated();
 	res.locals.error = req.flash("error");
 	res.locals.success = req.flash("success");
+	res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
 	next();
 });
 

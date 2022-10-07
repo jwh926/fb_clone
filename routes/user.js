@@ -3,8 +3,8 @@ const User = require("../models/User");
 const passport = require("passport");
 const multer = require("multer");
 const cloudinary = require("cloudinary");
-const csrf = require('csurf');
-const csrfProtection = csrf({cookie: true});
+const csurf = require('csurf');
+const csrfProtection = csurf({cookie: true});
 const router = express.Router();
 
 const storage = multer.diskStorage({
